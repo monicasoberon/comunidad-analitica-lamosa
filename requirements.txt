@@ -1,0 +1,6 @@
+# requirements.txt 
+snowflake-snowpark-python
+streamlit
+streamlit_msal
+seaborn==0.13.2
+matplotlib==3.9.2
