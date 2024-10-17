@@ -3,13 +3,26 @@ import streamlit as st
 from snowflake.snowpark.functions import col  # Re-added this import
 import pandas as pd
 import time
+import snowflake.snowpark.session as snow_session
 
-# Initialize connection to Snowflake
-cnx = st.connection("snowflake")
-session = cnx.session()
+# Retrieve Snowflake connection parameters from environment variables
+snowflake_connection_parameters = {
+    'account': os.environ.get('SNOWFLAKE_ACCOUNT'),
+    'user': os.environ.get('SNOWFLAKE_USER'),
+    'password': os.environ.get('SNOWFLAKE_PASSWORD'),
+    'role': os.environ.get('SNOWFLAKE_ROLE'),
+    'warehouse': os.environ.get('SNOWFLAKE_WAREHOUSE'),
+    'database': os.environ.get('SNOWFLAKE_DATABASE'),
+    'schema': os.environ.get('SNOWFLAKE_SCHEMA'),
+    'client_session_keep_alive': True
+}
 
-# Get the user's name from Azure App Service authentication
-user_name = os.environ.get('X-MS-CLIENT-PRINCIPAL-NAME')
+# Initialize Snowflake session
+session = snow_session.Session.builder.configs(snowflake_connection_parameters).create()
+
+client_id = os.environ.get('CLIENT_ID')
+authority = os.environ.get('AUTHORITY')
+
 
 if user_name:
     # User is authenticated
