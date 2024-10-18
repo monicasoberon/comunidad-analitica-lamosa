@@ -1,6 +1,5 @@
-# requirements.txt 
 snowflake-snowpark-python
 streamlit
-streamlit_msal
+pandas
 seaborn==0.13.2
 matplotlib==3.9.2
