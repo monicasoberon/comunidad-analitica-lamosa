@@ -1,5 +1,5 @@
 snowflake-snowpark-python
 streamlit
 pandas
-seaborn==0.13.2
-matplotlib==3.9.2
+seaborn
+matplotlib
