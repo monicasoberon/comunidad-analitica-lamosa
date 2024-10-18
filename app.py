@@ -5,6 +5,14 @@ import pandas as pd
 import time
 import snowflake.snowpark.session as snow_session
 
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Example usage
+logging.info("Application has started.")
+
 # Retrieve Snowflake connection parameters from environment variables
 snowflake_connection_parameters = {
     'account': os.environ.get('ACCOUNT'),
