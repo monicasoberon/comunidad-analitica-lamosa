@@ -7,22 +7,21 @@ import snowflake.snowpark.session as snow_session
 
 # Retrieve Snowflake connection parameters from environment variables
 snowflake_connection_parameters = {
-    'account': os.environ.get('SNOWFLAKE_ACCOUNT'),
-    'user': os.environ.get('SNOWFLAKE_USER'),
-    'password': os.environ.get('SNOWFLAKE_PASSWORD'),
-    'role': os.environ.get('SNOWFLAKE_ROLE'),
-    'warehouse': os.environ.get('SNOWFLAKE_WAREHOUSE'),
-    'database': os.environ.get('SNOWFLAKE_DATABASE'),
-    'schema': os.environ.get('SNOWFLAKE_SCHEMA'),
+    'account': os.environ.get('ACCOUNT'),
+    'user': os.environ.get('USER'),
+    'password': os.environ.get('PASSWORD'),
+    'role': os.environ.get('ROLE'),
+    'warehouse': os.environ.get('WAREHOUSE'),
+    'database': os.environ.get('DATABASE'),
+    'schema': os.environ.get('SCHEMA'),
     'client_session_keep_alive': True
 }
 
 # Initialize Snowflake session
 session = snow_session.Session.builder.configs(snowflake_connection_parameters).create()
 
-client_id = os.environ.get('CLIENT_ID')
-authority = os.environ.get('AUTHORITY')
-
+# Get the user's name from Azure App Service authentication
+user_name = os.environ.get('X-MS-CLIENT-PRINCIPAL-NAME')
 
 if user_name:
     # User is authenticated
@@ -57,3 +56,4 @@ else:
     st.markdown("<h2 style='text-align: center;'>Bienvenido a la página de Gestiones y Estadísticas de la Comunidad de Analítica.</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'>Por favor, autentícate con tu cuenta de Microsoft empresarial.</p>", unsafe_allow_html=True)
     st.stop()
+
