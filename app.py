@@ -1,16 +1,13 @@
 import os
 import streamlit as st
-from snowflake.snowpark.functions import col  # Re-added this import
+from snowflake.snowpark.functions import col
 import pandas as pd
 import time
 import snowflake.snowpark.session as snow_session
-
 import logging
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
-
-# Example usage
 logging.info("Application has started.")
 
 # Retrieve Snowflake connection parameters from environment variables
@@ -28,8 +25,22 @@ snowflake_connection_parameters = {
 # Initialize Snowflake session
 session = snow_session.Session.builder.configs(snowflake_connection_parameters).create()
 
+# Function to get request headers
+def get_request_headers():
+    from streamlit.runtime.runtime import Runtime
+    from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
+    ctx = get_script_run_ctx()
+    if ctx is None:
+        return {}
+    session_info = Runtime.instance().get_client(ctx.session_id)
+    if session_info:
+        return session_info.request.headers
+    else:
+        return {}
+
 # Get the user's name from Azure App Service authentication
-user_name = os.environ.get('X-MS-CLIENT-PRINCIPAL-NAME')
+headers = get_request_headers()
+user_name = headers.get('X-MS-CLIENT-PRINCIPAL-NAME')
 
 if user_name:
     # User is authenticated
@@ -64,4 +75,3 @@ else:
     st.markdown("<h2 style='text-align: center;'>Bienvenido a la página de Gestiones y Estadísticas de la Comunidad de Analítica.</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'>Por favor, autentícate con tu cuenta de Microsoft empresarial.</p>", unsafe_allow_html=True)
     st.stop()
-
