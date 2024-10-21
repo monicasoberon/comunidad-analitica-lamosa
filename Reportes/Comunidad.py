@@ -5,12 +5,12 @@ from snowflake.snowpark.functions import col
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-cnx = st.connection("snowflake")
-session = cnx.session()
+if 'snowflake_session' not in st.session_state:
+    st.error("Snowflake session not found. Please make sure to run the main app first.")
+    st.stop()
 
-if "auth_data" not in st.session_state:
-    st.write("Please authenticate to access this page.")
-    st.stop()  # Stop the execution of this page
+session = st.session_state['snowflake_session']
+
 
 st.title("Reporte Actividad Comunidad")
 st.write(

@@ -5,14 +5,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from snowflake.snowpark.functions import col
 
-# Connect to Snowflake
-cnx = st.connection("snowflake")
-session = cnx.session()
-
-# Authentication check
-if "auth_data" not in st.session_state:
-    st.write("Please authenticate to access this page.")
+if 'snowflake_session' not in st.session_state:
+    st.error("Snowflake session not found. Please make sure to run the main app first.")
     st.stop()
+
+session = st.session_state['snowflake_session']
+
 
 # Set a general Seaborn style for all visualizations
 sns.set_style("whitegrid")

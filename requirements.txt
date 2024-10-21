@@ -1,4 +1,5 @@
 snowflake-snowpark-python
+snowflake-connector-python
 streamlit
 pandas
 seaborn
