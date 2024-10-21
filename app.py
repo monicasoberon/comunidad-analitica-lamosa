@@ -15,15 +15,14 @@ key_vault_url = os.getenv("AZURE_KEY_VAULT_URL")
 credential = DefaultAzureCredential()
 client = SecretClient(vault_url=key_vault_url, credential=credential)
 
-# Snowflake connection parameters
 snowflake_connection_parameters = {
-    "account": os.environ.get("SNOWACCOUNT"),
-    "user": os.environ.get("USER"),
-    "password": os.environ.get("PASSWORD"),
-    "role": os.environ.get("ROLE"),
-    "warehouse": os.environ.get("WAREHOUSE"),
-    "database": os.environ.get("DATABASE"),
-    "schema": os.environ.get("SCHEMA"),
+    "account": client.get_secret("ACCOUNT").value,
+    "user": client.get_secret("USER").value,
+    "password": client.get_secret("PASSWORD").value,
+    "role": client.get_secret("ROLE").value,
+    "warehouse": client.get_secret("WAREHOUSE").value,
+    "database": client.get_secret("DATABASE").value,
+    "schema": client.get_secret("SCHEMA").value,
     "client_session_keep_alive": True
 }
 
