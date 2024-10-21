@@ -8,9 +8,12 @@ from snowflake.snowpark.session import Session
 import snowflake.snowpark as snowpark
 from snowflake.snowpark.dataframe_reader import *
 from snowflake.snowpark.functions import *
-from dotenv import load_dotenv
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
 
-load_dotenv()
+key_vault_url = os.getenv("AZURE_KEY_VAULT_URL")
+credential = DefaultAzureCredential()
+client = SecretClient(vault_url=key_vault_url, credential=credential)
 
 # Snowflake connection parameters
 snowflake_connection_parameters = {

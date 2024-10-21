@@ -1,5 +1,7 @@
 snowflake-snowpark-python
 snowflake-connector-python
+azure-keyvault-keys
+azure-identity
 streamlit
 pandas
 seaborn
