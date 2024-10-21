@@ -1,6 +1,5 @@
 import os
 import streamlit as st
-from dotenv import load_dotenv  # Import the dotenv library
 from snowflake.snowpark.functions import col
 import pandas as pd
 import time
