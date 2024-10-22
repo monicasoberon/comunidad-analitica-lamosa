@@ -1,6 +1,6 @@
 snowflake-snowpark-python
 snowflake-connector-python
-azure-keyvault-keys
+azure-keyvault-secrets
 azure-identity
 streamlit
 pandas
