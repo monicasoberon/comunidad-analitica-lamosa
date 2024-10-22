@@ -10,20 +10,43 @@ from snowflake.snowpark.functions import *
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
-key_vault_url = os.getenv("AZURE_KEY_VAULT_URL")
-credential = DefaultAzureCredential()
-client = SecretClient(vault_url=key_vault_url, credential=credential)
 
-snowflake_connection_parameters = {
-    "account": client.get_secret("ACCOUNT").value,
-    "user": client.get_secret("USER").value,
-    "password": client.get_secret("PASSWORD").value,
-    "role": client.get_secret("ROLE").value,
-    "warehouse": client.get_secret("WAREHOUSE").value,
-    "database": client.get_secret("DATABASE").value,
-    "schema": client.get_secret("SCHEMA").value,
+environment = os.getenv('ENVIRONMENT', 'local')
+
+if environment == 'local':
+    from dotenv import load_dotenv
+    load_dotenv()
+    snowflake_connection_parameters = {
+    "account": os.getenv("ACCOUNT").value,
+    "user": "MONICA_SOBERON",
+    "password": os.getenv("PASSWORD").value,
+    "role": "PRACTICANTE_ROLE",
+    "warehouse": "PRACTICANTE_WH",
+    "database": "LABORATORIO",
+    "schema": "MONICA_SOBERON",
     "client_session_keep_alive": True
 }
+
+else:
+    key_vault_name = os.getenv("AZURE_KEYVAULT_NAME")
+    key_vault_url = f"https://{key_vault_name}.vault.azure.net/"
+
+    # Create a credential to access Azure services
+    credential = DefaultAzureCredential()
+
+    # Create a client to access Azure Key Vault
+    client = SecretClient(vault_url=key_vault_url, credential=credential)
+
+    snowflake_connection_parameters = {
+        "account": client.get_secret("ACCOUNT").value,
+        "user": "MONICA_SOBERON",
+        "password": client.get_secret("PASSWORD").value,
+        "role": "PRACTICANTE_ROLE",
+        "warehouse": "PRACTICANTE_WH",
+        "database": "LABORATORIO",
+        "schema": "MONICA_SOBERON",
+        "client_session_keep_alive": True
+    }
 
 def get_snowflake_session(snowflake_connection_parameters):
 
