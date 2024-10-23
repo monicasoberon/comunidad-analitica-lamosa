@@ -62,31 +62,18 @@ if 'snowflake_session' not in st.session_state:
     except Exception as e:
         st.error(str(e))
         st.stop()
-        
-# Check if 'content_visible' is in session state
-if 'content_visible' not in st.session_state:
-    st.session_state['content_visible'] = True
 
-# Display the content if it's still marked as visible
-if st.session_state['content_visible']:
-    # Set up the UI with columns and images
-    col1, col2 = st.columns(2)
-    with col1:
-        st.image("Imagenes/logo-lamosa.png", width=300)
-    with col2:
-        st.image("Imagenes/LogoOficial.png", width=350)
+# Set up the UI with columns and images
+col1, col2 = st.columns(2)
+with col1:
+    st.image("Imagenes/logo-lamosa.png", width=300)
+with col2:
+    st.image("Imagenes/LogoOficial.png", width=350)
 
-    st.markdown(
-        "<h2 style='text-align: center;'>Bienvenido a la página de Gestiones y Estadísticas de la Comunidad de Analítica.</h2>",
-        unsafe_allow_html=True
-    )
-
-    # Simulate delay to hide content after 10 seconds
-    time.sleep(10)
-
-    # Hide the content after 10 seconds
-    st.session_state['content_visible'] = False
-    st.experimental_rerun()
+st.markdown(
+    "<h2 style='text-align: center;'>Bienvenido a la página de Gestiones y Estadísticas de la Comunidad de Analítica.</h2>",
+    unsafe_allow_html=True
+)
 
 # Sidebar with images
 with st.sidebar:
