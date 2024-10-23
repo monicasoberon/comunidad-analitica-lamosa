@@ -99,7 +99,6 @@ individual = st.Page("Reportes/Individual.py", title="Individual")
 comunidad = st.Page("Reportes/Comunidad.py", title="Comunidad")
 estadisticas = st.Page("Reportes/Estadisticas.py", title="Estadísticas")
 
-# Set up navigation
 pg = st.navigation(
     {
         "Gestiones": [sesiones, cursos, clases, usuarios],
