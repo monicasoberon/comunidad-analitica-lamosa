@@ -10,14 +10,27 @@ from snowflake.snowpark.functions import *
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
-# Set key vault URL
-key_vault_url = os.getenv("AZURE_KEYVAULT_RESOURCEENDPOINT")
 
-# Create a credential, specifying the user-assigned managed identity (optional)
-credential = DefaultAzureCredential(managed_identity_client_id=os.getenv("AZURE_KEYVAULT_CLIENTID"))
+# Fetch the Key Vault URL and Managed Identity Client ID from environment variables
+key_vault_url = os.getenv("AZURE_KEYVAULT_RESOURCEENDPOINT")
+user_assigned_identity_client_id = os.getenv("AZURE_KEYVAULT_CLIENTID")
+
+if not key_vault_url or not user_assigned_identity_client_id:
+    raise Exception("Key Vault URL or Client ID not set in environment variables")
+
+# Use DefaultAzureCredential with the user-assigned managed identity's client ID
+credential = DefaultAzureCredential(managed_identity_client_id=user_assigned_identity_client_id)
 
 # Create a client to access Azure Key Vault
 client = SecretClient(vault_url=key_vault_url, credential=credential)
+
+# Retrieve secrets from Key Vault
+try:
+    account = client.get_secret("ACCOUNT").value
+    password = client.get_secret("PASSWORD").value
+    print(f"Account: {account}, Password: {password}")
+except Exception as e:
+    print(f"Error retrieving secrets from Azure Key Vault: {e}")
 
 # Fetch Snowflake connection parameters from Azure Key Vault
 snowflake_connection_parameters = {
