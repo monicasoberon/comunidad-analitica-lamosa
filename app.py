@@ -10,47 +10,27 @@ from snowflake.snowpark.functions import *
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
-# Determine the environment (local or Azure)
-environment = os.getenv('ENVIRONMENT', 'local')
 
-# Local environment setup using .env file
-if environment == 'local':
-    from dotenv import load_dotenv
-    load_dotenv()
-    
-    snowflake_connection_parameters = {
-        "account": os.getenv("ACCOUNT"),  # Removed `.value`
-        "user": "MONICA_SOBERON",
-        "password": os.getenv("PASSWORD"),  # Removed `.value`
-        "role": "PRACTICANTE_ROLE",
-        "warehouse": "PRACTICANTE_WH",
-        "database": "LABORATORIO",
-        "schema": "MONICA_SOBERON",
-        "client_session_keep_alive": True
-    }
+key_vault_name = os.getenv("AZURE_KEYVAULT_NAME")
+key_vault_url = f"https://{key_vault_name}.vault.azure.net/"
 
-# Azure environment setup using Azure Key Vault
-else:
-    key_vault_name = os.getenv("AZURE_KEYVAULT_NAME")
-    key_vault_url = f"https://{key_vault_name}.vault.azure.net/"
+# Create a credential to access Azure services
+credential = DefaultAzureCredential()
 
-    # Create a credential to access Azure services
-    credential = DefaultAzureCredential()
+# Create a client to access Azure Key Vault
+client = SecretClient(vault_url=key_vault_url, credential=credential)
 
-    # Create a client to access Azure Key Vault
-    client = SecretClient(vault_url=key_vault_url, credential=credential)
-
-    # Fetch Snowflake connection parameters from Azure Key Vault
-    snowflake_connection_parameters = {
-        "account": client.get_secret("ACCOUNT").value,
-        "user": "MONICA_SOBERON",
-        "password": client.get_secret("PASSWORD").value,
-        "role": "PRACTICANTE_ROLE",
-        "warehouse": "PRACTICANTE_WH",
-        "database": "LABORATORIO",
-        "schema": "MONICA_SOBERON",
-        "client_session_keep_alive": True
-    }
+# Fetch Snowflake connection parameters from Azure Key Vault
+snowflake_connection_parameters = {
+    "account": client.get_secret("ACCOUNT").value,
+    "user": "MONICA_SOBERON",
+    "password": client.get_secret("PASSWORD").value,
+    "role": "PRACTICANTE_ROLE",
+    "warehouse": "PRACTICANTE_WH",
+    "database": "LABORATORIO",
+    "schema": "MONICA_SOBERON",
+    "client_session_keep_alive": True
+}
 
 # Function to establish a Snowflake session
 def get_snowflake_session(snowflake_connection_parameters):
