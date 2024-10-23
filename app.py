@@ -10,23 +10,26 @@ from snowflake.snowpark.functions import *
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
-
+# Determine the environment (local or Azure)
 environment = os.getenv('ENVIRONMENT', 'local')
 
+# Local environment setup using .env file
 if environment == 'local':
     from dotenv import load_dotenv
     load_dotenv()
+    
     snowflake_connection_parameters = {
-    "account": os.getenv("ACCOUNT").value,
-    "user": "MONICA_SOBERON",
-    "password": os.getenv("PASSWORD").value,
-    "role": "PRACTICANTE_ROLE",
-    "warehouse": "PRACTICANTE_WH",
-    "database": "LABORATORIO",
-    "schema": "MONICA_SOBERON",
-    "client_session_keep_alive": True
-}
+        "account": os.getenv("ACCOUNT"),  # Removed `.value`
+        "user": "MONICA_SOBERON",
+        "password": os.getenv("PASSWORD"),  # Removed `.value`
+        "role": "PRACTICANTE_ROLE",
+        "warehouse": "PRACTICANTE_WH",
+        "database": "LABORATORIO",
+        "schema": "MONICA_SOBERON",
+        "client_session_keep_alive": True
+    }
 
+# Azure environment setup using Azure Key Vault
 else:
     key_vault_name = os.getenv("AZURE_KEYVAULT_NAME")
     key_vault_url = f"https://{key_vault_name}.vault.azure.net/"
@@ -37,6 +40,7 @@ else:
     # Create a client to access Azure Key Vault
     client = SecretClient(vault_url=key_vault_url, credential=credential)
 
+    # Fetch Snowflake connection parameters from Azure Key Vault
     snowflake_connection_parameters = {
         "account": client.get_secret("ACCOUNT").value,
         "user": "MONICA_SOBERON",
@@ -48,8 +52,8 @@ else:
         "client_session_keep_alive": True
     }
 
+# Function to establish a Snowflake session
 def get_snowflake_session(snowflake_connection_parameters):
-
     try:
         session = Session.builder.configs(snowflake_connection_parameters).create()
         # Optionally, print version to verify connection
@@ -58,7 +62,8 @@ def get_snowflake_session(snowflake_connection_parameters):
         return session
     except Exception as e:
         raise Exception(f"Error connecting to Snowflake: {e}")
-    
+
+# Check if Snowflake session is in the session state
 if 'snowflake_session' not in st.session_state:
     try:
         st.session_state['snowflake_session'] = get_snowflake_session(snowflake_connection_parameters)
@@ -66,6 +71,7 @@ if 'snowflake_session' not in st.session_state:
         st.error(str(e))
         st.stop()
 
+# Set up the UI with columns and images
 col1, col2 = st.columns(2)
 with col1:
     st.image("Imagenes/logo-lamosa.png", width=300)
@@ -77,6 +83,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# Sidebar with images
 with st.sidebar:
     st.image("Imagenes/logo-lamosa.png", width=150)
     st.image("Imagenes/LogoOficial.png", width=150)
