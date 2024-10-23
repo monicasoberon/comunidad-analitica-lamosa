@@ -10,12 +10,11 @@ from snowflake.snowpark.functions import *
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
+# Set key vault URL
+key_vault_url = os.getenv("AZURE_KEYVAULT_RESOURCEENDPOINT")
 
-key_vault_name = os.getenv("AZURE_KEYVAULT_NAME")
-key_vault_url = f"https://{key_vault_name}.vault.azure.net/"
-
-# Create a credential to access Azure services
-credential = DefaultAzureCredential()
+# Create a credential, specifying the user-assigned managed identity (optional)
+credential = DefaultAzureCredential(managed_identity_client_id=os.getenv("AZURE_KEYVAULT_CLIENTID"))
 
 # Create a client to access Azure Key Vault
 client = SecretClient(vault_url=key_vault_url, credential=credential)
