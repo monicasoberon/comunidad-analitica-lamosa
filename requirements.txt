@@ -6,4 +6,4 @@ streamlit
 pandas
 seaborn
 matplotlib
-dotenv
+python-dotenv
