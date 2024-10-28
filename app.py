@@ -70,11 +70,6 @@ with col1:
 with col2:
     st.image("Imagenes/LogoOficial.png", width=350)
 
-st.markdown(
-    "<h2 style='text-align: center;'>Bienvenido a la página de Gestiones y Estadísticas de la Comunidad de Analítica.</h2>",
-    unsafe_allow_html=True
-)
-
 # Sidebar with images
 with st.sidebar:
     st.image("Imagenes/logo-lamosa.png", width=150)
